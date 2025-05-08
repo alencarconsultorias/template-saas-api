@@ -4,7 +4,7 @@ services:
     container_name: postgres_tsaas_localhost
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432" # host port different from RDS AWS (5432)
     environment:
       POSTGRES_USER: admin    
       POSTGRES_PASSWORD: admin
