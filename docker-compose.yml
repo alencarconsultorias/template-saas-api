@@ -3,12 +3,12 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: postgres_tsaas_dev
+    container_name: postgres_tsaas_localhost
     restart: always
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: dev_admin
+      POSTGRES_USER: admin
       POSTGRES_PASSWORD: senha123
       POSTGRES_DB: tsaas_localhost_db
     volumes:
