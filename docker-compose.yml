@@ -9,7 +9,7 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: senha123
+      POSTGRES_PASSWORD: admin
       POSTGRES_DB: tsaas_localhost_db
     volumes:
       - postgres_data:/var/lib/postgresql/data
