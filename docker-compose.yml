@@ -1,12 +1,12 @@
 services:
   postgres:
-    image: postgres:15
+    image: postgres:latest
     container_name: postgres_tsaas_localhost
     restart: always
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_USER: admin
+      POSTGRES_USER: admin    
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: tsaas_localhost_db
     volumes:
