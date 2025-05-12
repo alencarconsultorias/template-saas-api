@@ -7,7 +7,6 @@
 docker-compose up -d 
 ```
 3. Apos instalacao, identificar o container criado: 
-
 ```bash
 docker ps 
 ```
