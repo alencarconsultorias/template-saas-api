@@ -9,10 +9,10 @@ import { AppModule } from './../src/app.module';
 describe('AuthController (e2e)', () => {
   let app: INestApplication;
   let server: any;
-  // Substitua por um token válido de teste do Firebase
-  const TEST_FIREBASE_TOKEN = process.env.TEST_FIREBASE_TOKEN || 'TOKEN_AQUI';
-  const TEST_EMAIL = process.env.TEST_EMAIL || 'testuser@example.com';
+  // Gera um e-mail único para cada execução de teste
+  const TEST_EMAIL = `testuser_${Date.now()}@example.com`;
   const TEST_PASSWORD = process.env.TEST_PASSWORD || 'Test@123456';
+  const TEST_FIREBASE_TOKEN = process.env.TEST_FIREBASE_TOKEN || 'TOKEN_AQUI';
 
   beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
