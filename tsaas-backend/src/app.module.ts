@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from './auth/auth.module';
+import { initializeFirebase } from './config/firebase.config';
 
 @Module({
   imports: [
@@ -10,4 +11,8 @@ import { AuthModule } from './auth/auth.module';
     AuthModule,
   ],
 })
-export class AppModule {}
+export class AppModule {
+  constructor() {
+    initializeFirebase();
+  }
+}
