@@ -4,13 +4,14 @@ services:
     container_name: postgres_tsaas_localhost
     restart: always
     ports:
-      - "5433:5432" # host port different from RDS AWS (5432)
+      - "5433:5432" # host port different from RDS AWS (5432) ; <external port>:<internal port>
     environment:
       POSTGRES_USER: admin    
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: tsaas_localhost_db
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - ./dados_pg:/var/lib/postgresql/data
 
-volumes:
-  postgres_data:
+# note: 
+# Left port (5433): acess host (localhost)
+# Right port (5432): access container (postgres)

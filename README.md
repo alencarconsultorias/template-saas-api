@@ -10,6 +10,16 @@ docker-compose up -d
 ```bash
 docker ps 
 ```
+4. Conferir instalação correta do docker-compose: 
+```bash 
+psql -h localhost -p 5433 -U admin -d tsaas_localhost_db 
+```
+5. Dica caso precise derrubar o serviço e/ou volume: 
+```bash
+docker-compose down #all services
+docker-compose down -v #all volumes
+```
+
 ## 🚩 Contribuindo
 Consulte o arquivo [CONTRIBUTING.md](/docs-org/CONTRIBUTING.md) para instruções.
 
