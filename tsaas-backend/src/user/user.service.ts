@@ -18,18 +18,22 @@ export class UserService {
   }
 
   findAll() {
+    console.log("Finding all users successfully!"); // message to console
     return this.prisma.user.findMany();
   }
 
   findOne(id: number) {
+    console.log("Finding user by id successfully! id:", id);  // message to console
     return this.prisma.user.findUnique({ where: { id } });
   }
 
   update(id: number, data: UpdateUserDto) {
+    console.log("Updating user by id successfully! id:", id);  // message to console
     return this.prisma.user.update({ where: { id }, data });
   }
 
   remove(id: number) {
+    console.log("Deleting user by id successfully! id:", id);  // message to console
     return this.prisma.user.delete({ where: { id } });
   }
 }
