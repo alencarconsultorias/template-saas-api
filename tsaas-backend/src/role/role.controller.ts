@@ -2,7 +2,9 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('role') // Swagger tag
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
@@ -13,6 +15,8 @@ export class RoleController {
   }
 
   @Get()
+  @ApiOperation({ summary: 'Get all roles' }) // Swagger operation
+  @ApiResponse({ status: 200, description: 'Return all roles' }) // Swagger response
   findAll() {
     return this.roleService.findAll();
   }
