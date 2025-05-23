@@ -125,7 +125,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/alisonalencar/Library/Mobile Documents/com~apple~CloudDocs/1 - ALENCAR CONSULTORIAS/Repos-github/template-saas-api/tsaas-backend/generated/prisma",
+      "value": "C:\\Users\\lucas\\Documents\\.TRABALHO\\Development\\Tsaas\\backend\\template-saas-api\\tsaas-backend\\generated\\prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -134,12 +134,12 @@ const config = {
     "binaryTargets": [
       {
         "fromEnvVar": null,
-        "value": "darwin",
+        "value": "windows",
         "native": true
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/Users/alisonalencar/Library/Mobile Documents/com~apple~CloudDocs/1 - ALENCAR CONSULTORIAS/Repos-github/template-saas-api/tsaas-backend/prisma/schema.prisma",
+    "sourceFilePath": "C:\\Users\\lucas\\Documents\\.TRABALHO\\Development\\Tsaas\\backend\\template-saas-api\\tsaas-backend\\prisma\\schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
@@ -153,11 +153,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://admin:admin@localhost:5433/tsaas_localhost_db?schema=public"
+        "value": null
       }
     }
   },
@@ -201,8 +202,8 @@ exports.PrismaClient = PrismaClient
 Object.assign(exports, Prisma)
 
 // file annotations for bundling tools to include these files
-path.join(__dirname, "libquery_engine-darwin.dylib.node");
-path.join(process.cwd(), "generated/prisma/libquery_engine-darwin.dylib.node")
+path.join(__dirname, "query_engine-windows.dll.node");
+path.join(process.cwd(), "generated/prisma/query_engine-windows.dll.node")
 // file annotations for bundling tools to include these files
 path.join(__dirname, "schema.prisma");
 path.join(process.cwd(), "generated/prisma/schema.prisma")
