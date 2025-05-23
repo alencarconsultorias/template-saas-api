@@ -9,8 +9,8 @@ services:
       POSTGRES_USER: admin    
       POSTGRES_PASSWORD: admin
       POSTGRES_DB: tsaas_localhost_db
-    volumes:
-      - ./dados_pg:/var/lib/postgresql/data
+    # volumes:
+      # - ./dados_pg:/var/lib/postgresql/data
 
 # note: 
 # Left port (5433): acess host (localhost)
