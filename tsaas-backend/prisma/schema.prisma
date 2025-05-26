@@ -14,10 +14,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Entity example User 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int     @id @default(autoincrement())
   name      String
-  email     String   @unique
+  email     String  @unique
+  createdAt DateTime @default(now())
+}
+
+model Role {
+  id        Int     @id @default(autoincrement())
+  label     String  @unique 
   createdAt DateTime @default(now())
 }
