@@ -1,11 +1,22 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { FirebaseAuthGuard } from 'src/auth/firebase-auth.guard';
+import { DecodedIdToken } from 'firebase-admin/auth';
+import { CurrentUser } from 'src/auth/current-user.decorator';
 
 @Controller('user')
+@UseGuards(FirebaseAuthGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('me')
+  async getProfile(
+    @CurrentUser() decodedToken: DecodedIdToken,
+  ) {
+    return this.userService.findOrCreateFromFirebase(decodedToken);
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
