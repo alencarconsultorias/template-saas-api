@@ -3,12 +3,14 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
 
 @ApiTags('user') // Swagger tag
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @UseGuards(FirebaseAuthGuard) 
   @Post()
   @ApiOperation({ summary: 'Create a new user' }) // Swagger operation
   @ApiResponse({ status: 201, description: 'Return the created user' }) // Swagger response

@@ -6,6 +6,17 @@ import { UpdateUserDto } from './dto/update-user.dto';
 @Injectable()
 export class UserService {
   constructor(private prisma: PrismaService) {}
+  
+  // find or create user by firebaseUid
+  async findOrCreateByFirebaseUid(firebaseUid: string, email: string, name: string) {
+    let user = await this.prisma.user.findUnique({ where: { firebaseUid } });
+    if (!user) {
+      user = await this.prisma.user.create({
+        data: { firebaseUid, email, name },
+      });
+    }
+    return user;
+  }
 
   // create user on Prisma
   create(data: CreateUserDto) {
