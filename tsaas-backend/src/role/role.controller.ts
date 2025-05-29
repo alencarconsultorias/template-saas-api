@@ -10,6 +10,8 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Post()
+  @ApiOperation({ summary: 'Create a new role' }) // Swagger operation
+  @ApiResponse({ status: 201, description: 'Return the created role' }) // Swagger response
   create(@Body() createRoleDto: CreateRoleDto) {
     return this.roleService.create(createRoleDto);
   }
@@ -22,16 +24,22 @@ export class RoleController {
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get a role by id' }) // Swagger operation
+  @ApiResponse({ status: 200, description: 'Return the role' }) // Swagger response
   findOne(@Param('id') id: string) {
     return this.roleService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update a role by id' }) // Swagger operation
+  @ApiResponse({ status: 200, description: 'Return the updated role' }) // Swagger response
   update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return this.roleService.update(+id, updateRoleDto);
   }
 
   @Delete(':id')
+  @ApiOperation({ summary: 'Delete a role by id' }) // Swagger operation
+  @ApiResponse({ status: 200, description: 'Return the deleted role' }) // Swagger response
   remove(@Param('id') id: string) {
     return this.roleService.remove(+id);
   }

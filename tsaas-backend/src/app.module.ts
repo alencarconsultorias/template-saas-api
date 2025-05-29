@@ -4,10 +4,9 @@ import { AppService } from './app.service';
 import { PrismaService } from './prisma/prisma.service';
 import { UserModule } from './user/user.module';
 import { RoleModule } from './role/role.module';
-import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
-  imports: [UserModule, RoleModule, FirebaseModule],
+  imports: [UserModule, RoleModule], 
   controllers: [AppController],
   providers: [AppService, PrismaService],
   exports: [PrismaService],
