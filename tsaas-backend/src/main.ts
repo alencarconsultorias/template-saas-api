@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule , {cors: true});
 
   // Set global prefix for the API
-  app.setGlobalPrefix('api');
+  // app.setGlobalPrefix('api');
 
   // Swagger creation API 
   const config = new DocumentBuilder()
