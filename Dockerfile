@@ -10,7 +10,7 @@ COPY tsaas-backend/package*.json ./
 # Install dependencies
 RUN npm ci
 
-# Copy source code
+# Copy source code and configuration files
 COPY tsaas-backend/ ./
 
 # Generate Prisma client and build the application
@@ -36,8 +36,13 @@ COPY --from=builder /app/generated/prisma ./generated/prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
+# Copy configuration files
+COPY tsaas-backend/tsconfig*.json ./
+COPY tsaas-backend/nest-cli.json ./
+
 # Copy environment files
 COPY tsaas-backend/.env.aws ./
+COPY tsaas-backend/.env.localhost.dev ./
 
 # Expose port
 EXPOSE 3000
