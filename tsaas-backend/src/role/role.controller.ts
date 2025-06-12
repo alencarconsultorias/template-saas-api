@@ -1,14 +1,17 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
 
 @ApiTags('role') // Swagger tag
 @Controller('role')
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
+  // protect all routes with firebase auth guard
+  @UseGuards(FirebaseAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Create a new role' }) // Swagger operation
   @ApiResponse({ status: 201, description: 'Return the created role' }) // Swagger response
