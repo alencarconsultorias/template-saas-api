@@ -1,9 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule , {cors: true});
+  
+  // Get the Winston logger
+  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
+  app.useLogger(logger);
 
   // Set global prefix for the API
   // app.setGlobalPrefix('api');
@@ -25,8 +30,8 @@ async function bootstrap() {
   //await app.listen(3000);
   // "0.0.0.0" is used to listen on all interfaces
   await app.listen(process.env.PORT ?? 3000, "0.0.0.0");
-  console.log(`Server running on http://localhost:${process.env.PORT ?? 3000}`);
-  console.log(`Swagger running on http://localhost:${process.env.PORT ?? 3000}/api-docs`);
+  logger.log(`Server running on http://localhost:${process.env.PORT ?? 3000}`, 'Bootstrap');
+  logger.log(`Swagger running on http://localhost:${process.env.PORT ?? 3000}/api-docs`, 'Bootstrap');
 }
 
 bootstrap();
