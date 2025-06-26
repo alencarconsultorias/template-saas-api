@@ -33,6 +33,7 @@ export class RoleController {
     return this.roleService.findOne(+id);
   }
 
+  @UseGuards(FirebaseAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a role by id' }) // Swagger operation
   @ApiResponse({ status: 200, description: 'Return the updated role' }) // Swagger response
@@ -40,6 +41,7 @@ export class RoleController {
     return this.roleService.update(+id, updateRoleDto);
   }
 
+  @UseGuards(FirebaseAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a role by id' }) // Swagger operation
   @ApiResponse({ status: 200, description: 'Return the deleted role' }) // Swagger response

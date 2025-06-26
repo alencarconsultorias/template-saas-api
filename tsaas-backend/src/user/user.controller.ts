@@ -34,6 +34,7 @@ export class UserController {
     return this.userService.findOne(+id);
   }
 
+  @UseGuards(FirebaseAuthGuard)
   @Patch(':id')
   @ApiOperation({ summary: 'Update a user by id' }) // Swagger operation
   @ApiResponse({ status: 200, description: 'Return the updated user' }) // Swagger response
@@ -41,6 +42,7 @@ export class UserController {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @UseGuards(FirebaseAuthGuard)
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a user by id' }) // Swagger operation
   @ApiResponse({ status: 200, description: 'Return the deleted user' }) // Swagger response
