@@ -30,7 +30,7 @@ npm run start:aws
 ```
 
 ## 📄 Confluence  
-Acesse o portal para identificar documentaçōes tecnicas do projeto [Clique aqui](https://alencar-consultorias.atlassian.net/wiki/x/MoE7)
+Acesse o hub da empresa para identificar documentaçōes tecnicas do projeto [Hub no Confluence](https://alencar-consultorias.atlassian.net/wiki/company-hub)
 
 ## 🚩 Contribuindo
 Consulte o arquivo [CONTRIBUTING.md](/docs-org/CONTRIBUTING.md) para instruções.
