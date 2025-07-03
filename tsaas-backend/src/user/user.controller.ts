@@ -3,7 +3,7 @@ import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
+import { FirebaseAuthGuard } from 'src/modules/firebase/firebase-auth.guard';
 
 // Swagger tags
 @ApiTags('user') 
