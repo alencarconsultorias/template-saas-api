@@ -137,7 +137,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/Users/alisonalencar/Library/Mobile Documents/com~apple~CloudDocs/1 - ALENCAR CONSULTORIAS/Repos-github/template-saas-api/tsaas-backend/generated/prisma",
+      "value": "/Users/alisonalencar/Library/Mobile Documents/com~apple~CloudDocs/1 - ALENCAR CONSULTORIAS/Repos-github/template-saas-api/tsaas-backend/prisma/@prisma/client",
       "fromEnvVar": null
     },
     "config": {
@@ -155,10 +155,10 @@ const config = {
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
-    "rootEnvPath": null,
-    "schemaEnvPath": "../../.env"
+    "rootEnvPath": "../../../.env",
+    "schemaEnvPath": "../../../.env"
   },
-  "relativePath": "../../prisma",
+  "relativePath": "../..",
   "clientVersion": "6.8.2",
   "engineVersion": "2060c79ba17c6bb9f5823312b6f6b7f4a845738e",
   "datasourceNames": [
@@ -173,8 +173,8 @@ const config = {
       }
     }
   },
-  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"../generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id          Int      @id @default(autoincrement())\n  firebaseUid String?  @unique\n  name        String\n  email       String   @unique\n  createdAt   DateTime @default(now())\n}\n\nmodel Role {\n  id        Int      @id @default(autoincrement())\n  label     String   @unique\n  createdAt DateTime @default(now())\n}\n",
-  "inlineSchemaHash": "56fddcb118dbcce0a57478440b2eae136b8c08642df4da352017422826b7a977",
+  "inlineSchema": "// This is your Prisma schema file,\n// learn more about it in the docs: https://pris.ly/d/prisma-schema\n\n// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?\n// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init\n\ngenerator client {\n  provider = \"prisma-client-js\"\n  output   = \"@prisma/client\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel User {\n  id          Int      @id @default(autoincrement())\n  firebaseUid String?  @unique\n  name        String\n  email       String   @unique\n  createdAt   DateTime @default(now())\n}\n\nmodel Role {\n  id        Int      @id @default(autoincrement())\n  label     String   @unique\n  createdAt DateTime @default(now())\n}\n",
+  "inlineSchemaHash": "53cd1f0c9339ecb3c1858e5415fa4319886756ce58fe3595948872fbc7446c9d",
   "copyEngine": true
 }
 config.dirname = '/'

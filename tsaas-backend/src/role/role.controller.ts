@@ -3,7 +3,7 @@ import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
+import { FirebaseAuthGuard } from 'src/modules/firebase/firebase-auth.guard';
 
 @ApiTags('role') // Swagger tag
 @Controller('role')
