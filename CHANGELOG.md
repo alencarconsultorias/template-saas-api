@@ -27,13 +27,15 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ---
 
-## [v1.0.0] - 2025-07-08
+## [v1.0.0] - YYYY-MM-DD
 
 ### Adicionado
-- Funcionalidade inicial do projeto Saas
-- Sistema de autenticação com Firebase
+- Funcionalidade inicial do projeto
+- Sistema de autenticação
 - Dashboard principal
-- Perfil de usuario
+
+### Corrigido
+- Correção de bugs críticos
 
 ---
 
