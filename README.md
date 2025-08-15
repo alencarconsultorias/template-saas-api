@@ -29,6 +29,14 @@ docker-compose down -v #all volumes
 npm run start:aws
 ```
 
+### Variáveis de ambiente do Firebase
+
+Para executar a aplicação com a autenticação do Firebase é necessário definir as seguintes variáveis de ambiente a partir das credenciais de serviço:
+
+- `FIREBASE_PROJECT_ID`
+- `FIREBASE_CLIENT_EMAIL`
+- `FIREBASE_PRIVATE_KEY` (substitua `\\n` por quebras de linha reais)
+
 ## 🚩 Contribuindo
 Consulte o arquivo [CONTRIBUTING.md](/docs-org/CONTRIBUTING.md) para instruções.
 
