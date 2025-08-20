@@ -1,0 +1,24 @@
+version: 1
+applications:
+  - appRoot: tsaas-backend
+    env:
+      variables:
+        FIREBASE_PROJECT_ID: ${FIREBASE_PROJECT_ID}
+        FIREBASE_CLIENT_EMAIL: ${FIREBASE_CLIENT_EMAIL}
+        FIREBASE_PRIVATE_KEY: ${FIREBASE_PRIVATE_KEY}
+    backend:
+      phases:
+        preBuild:
+          commands:
+            - npm ci
+            - npx prisma generate
+        build:
+          commands:
+            - npm run build
+    artifacts:
+      baseDirectory: dist
+      files:
+        - '**/*'
+    cache:
+      paths:
+        - node_modules/**/*

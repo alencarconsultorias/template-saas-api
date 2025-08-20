@@ -1,18 +1,27 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FirebaseAuthGuard } from 'src/firebase/firebase-auth.guard';
+import { FirebaseAuthGuard } from '../firebase/firebase-auth.guard';
 
 // Swagger tags
-@ApiTags('user') 
+@ApiTags('user')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   // protect all routes with firebase auth guard
-  @UseGuards(FirebaseAuthGuard) 
+  @UseGuards(FirebaseAuthGuard)
   @Post()
   @ApiOperation({ summary: 'Create a new user' }) // Swagger operation
   @ApiResponse({ status: 201, description: 'Return the created user' }) // Swagger response
