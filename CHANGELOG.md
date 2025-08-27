@@ -5,7 +5,34 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 O formato é baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/),
 e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR/).
 
+---
+
 ## [Unreleased]
+
+### Adicionado 
+
+---
+
+## [v1.0.0] - 2025-06-27
+
+### Adicionado
+- Autenticacao de usuarios com Firebase;  
+- CRUD completo de usuarios; 
+- Estrutura modular para NestJS; 
+- Implementado banco de dados com PostgreSQL e suas migrations no PrismaORM;
+- Rastreio de logs com Winston; 
+- Documentacao API Swagger. 
+
+---
+
+## Links úteis
+
+- [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
+- [Versionamento Semântico](https://semver.org/lang/pt-BR/)
+- [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/)
+- [Hub Confluence](https://alencar-consultorias.atlassian.net/wiki/company-hub) 
+
+## [Unreleased-status]
 
 ### Adicionado
 - Novas funcionalidades que foram adicionadas
@@ -24,24 +51,3 @@ e este projeto adere ao [Versionamento Semântico](https://semver.org/lang/pt-BR
 
 ### Segurança
 - Correções de vulnerabilidades
-
----
-
-## [v1.0.0] - YYYY-MM-DD
-
-### Adicionado
-- Funcionalidade inicial do projeto
-- Sistema de autenticação
-- Dashboard principal
-
-### Corrigido
-- Correção de bugs críticos
-
----
-
-## Links úteis
-
-- [Keep a Changelog](https://keepachangelog.com/pt-BR/1.0.0/)
-- [Versionamento Semântico](https://semver.org/lang/pt-BR/)
-- [Conventional Commits](https://www.conventionalcommits.org/pt-br/v1.0.0/)
-- [Hub Confluence](https://alencar-consultorias.atlassian.net/wiki/company-hub) 
