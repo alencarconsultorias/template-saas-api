@@ -56,5 +56,3 @@ Se possível, adicione **screenshots**, **GIFs** ou vídeos para facilitar o ent
 ## 📝 Observações Adicionais
 
 Inclua aqui logs do console, erros da API, mensagens do backend, dependências relacionadas ou qualquer outro detalhe técnico relevante.
-
----
