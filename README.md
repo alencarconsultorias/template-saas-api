@@ -4,6 +4,7 @@
 1. Identificar o arquivo `docker-compose.yml` no projeto. 
 2. Instalar o docker e subir o compose: 
 ```bash
+# simulacao local de um banco de dados PostgreSQL 
 docker-compose up -d 
 ```
 3. Apos instalacao, identificar o container criado: 

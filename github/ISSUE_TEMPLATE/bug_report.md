@@ -58,4 +58,3 @@ Adicione aqui qualquer protótipo (ex: Figma), imagem, documento técnico ou ref
 Outros pontos de atenção, dependências técnicas, sugestões de implementação ou riscos envolvidos.
 
 ---
-

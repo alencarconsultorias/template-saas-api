@@ -58,4 +58,3 @@ Fixes #[número-da-issue]
 
 <!--
 Outros pontos relevantes, decisões tomadas, dívidas técnicas geradas ou pontos de atenção futuros.
--->

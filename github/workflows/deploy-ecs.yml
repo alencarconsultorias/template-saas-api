@@ -1,0 +1,114 @@
+name: CI/CD – ECS Fargate
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+
+env:
+  AWS_REGION: sa-east-1
+  ECR_REPO: tsaas-api               # nome do repo no ECR
+  SERVICE_NAME_STAGING: tsaas-api-staging
+  SERVICE_NAME_PROD: tsaas-api-prod
+  CLUSTER_NAME: tsaas-cluster
+  CONTAINER_NAME: api               # nome do container no task def
+  TASK_FAMILY: tsaas-api-task       # family do task definition
+
+permissions:
+  id-token: write   # OIDC
+  contents: read
+
+jobs:
+  test-build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install deps (ci)
+        run: npm ci
+
+      - name: Lint & Test
+        run: |
+          npm run lint
+          npm test -- --ci
+
+      - name: Configure AWS credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}    # role com permissão ECR/ECS
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Set image tags
+        id: vars
+        run: |
+          SHA_TAG=${GITHUB_SHA::7}
+          echo "sha_tag=$SHA_TAG" >> $GITHUB_OUTPUT
+          # opcional: usar package.json version
+          if [ -f package.json ]; then
+            VER=$(jq -r .version package.json)
+            echo "ver_tag=$VER" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build and Push image
+        run: |
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}"
+          docker build -t "$IMAGE_URI:${{ steps.vars.outputs.sha_tag }}" .
+          docker push "$IMAGE_URI:${{ steps.vars.outputs.sha_tag }}"
+          if [ -n "${{ steps.vars.outputs.ver_tag }}" ]; then
+            docker tag "$IMAGE_URI:${{ steps.vars.outputs.sha_tag }}" "$IMAGE_URI:${{ steps.vars.outputs.ver_tag }}"
+            docker push "$IMAGE_URI:${{ steps.vars.outputs.ver_tag }}"
+          fi
+        env:
+          DOCKER_BUILDKIT: 1
+
+      - name: Prepare task definition (render image)
+        id: taskdef
+        run: |
+          IMAGE_URI="${{ steps.login-ecr.outputs.registry }}/${{ env.ECR_REPO }}:${{ steps.vars.outputs.sha_tag }}"
+          jq --arg img "$IMAGE_URI" \
+            --arg name "${{ env.CONTAINER_NAME }}" \
+            '(.containerDefinitions[] | select(.name==$name) | .image) |= $img' \
+            ecs/taskdef.json > taskdef.out.json
+          echo "taskdef=taskdef.out.json" >> $GITHUB_OUTPUT
+
+      # (Opcional) Rodar migração Prisma antes do deploy
+      # Estratégia: rodar um "one-off task" com a mesma imagem + command "npx prisma migrate deploy"
+      - name: Run Prisma migrate (optional)
+        if: ${{ github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop' }}
+        run: |
+          TASKDEF_FILE="${{ steps.taskdef.outputs.taskdef }}"
+          SUBNETS="${{ secrets.AWS_SUBNETS_CSV }}"        # ex: "subnet-aaa,subnet-bbb"
+          SECGROUPS="${{ secrets.AWS_SGS_CSV }}"          # ex: "sg-111,sg-222"
+          TASK_ROLE="${{ secrets.AWS_TASK_EXEC_ROLE_ARN }}"  # opcional se necessário
+          IMAGE=$(jq -r '.containerDefinitions[0].image' "$TASKDEF_FILE")
+          aws ecs run-task \
+            --cluster "${{ env.CLUSTER_NAME }}" \
+            --launch-type FARGATE \
+            --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$SECGROUPS],assignPublicIp=DISABLED}" \
+            --overrides "$(jq -n --arg img "$IMAGE" --arg name "${{ env.CONTAINER_NAME }}" \
+              '{containerOverrides:[{name:$name,command:["npx","prisma","migrate","deploy"]}]}')" \
+            --task-definition "${{ env.TASK_FAMILY }}"
+
+      - name: Register new task definition
+        id: register
+        run: |
+          ARN=$(aws ecs register-task-definition --cli-input-json file://${{ steps.taskdef.outputs.taskdef }} \
+                --query 'taskDefinition.taskDefinitionArn' --output text)
+          echo "task_arn=$ARN" >> $GITHUB_OUTPUT
+
+      - name: Deploy to ECS service
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.register.outputs.task_arn }}
+          service: ${{ github.ref == 'refs/heads/main' && env.SERVICE_NAME_PROD || env.SERVICE_NAME_STAGING }}
+          cluster: ${{ env.CLUSTER_NAME }}
+          wait-for-service-stability: true
