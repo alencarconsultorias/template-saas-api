@@ -1,44 +1,39 @@
-# Railway-optimized Dockerfile
-FROM node:20-alpine
+# Railway optimized Dockerfile for NestJS with Prisma
+FROM node:18-alpine AS builder
 
-# Set working directory
 WORKDIR /app
-
-# Install system dependencies
-RUN apk add --no-cache dumb-init
 
 # Copy package files
 COPY package*.json ./
+COPY prisma ./
 
 # Install dependencies
-RUN npm ci --silent
+RUN npm ci
 
 # Copy source code
-COPY . ./
+COPY . .
 
-# Generate Prisma client
+# Generate Prisma client and build
 RUN npx prisma generate
-
-# Build application
 RUN npm run build
 
-# Remove dev dependencies for production
-RUN npm ci --only=production --silent && npm cache clean --force
+# Production stage
+FROM node:18-alpine
 
-# Install Prisma CLI
-RUN npm install --no-save prisma --silent
+WORKDIR /app
 
-# Create user
-RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
-RUN chown -R nestjs:nodejs /app
-USER nestjs
+# Install production deps
+COPY package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-# Expose port
+# Copy built application
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
+COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+
+# Railway will provide PORT environment variable automatically
 EXPOSE 3000
 
-# Environment
-ENV NODE_ENV=production
-
-# Start with dumb-init
-ENTRYPOINT ["dumb-init", "--"]
-CMD ["npm", "run", "start:railway"]
+# CMD for Railway deployment
+CMD ["npx", "prisma", "migrate", "deploy", "&&", "node", "dist/main.js"]

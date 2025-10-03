@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+.env.localhost.dev
+.env.aws
+.env.railway
+logs
+*.log
+.DS_Store
+test
+spec
+*.md
+.github

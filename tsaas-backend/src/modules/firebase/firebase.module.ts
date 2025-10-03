@@ -7,8 +7,13 @@ import * as admin from 'firebase-admin';
     {
       provide: 'FIREBASE_ADMIN',
       useFactory: () => {
+        const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
+        if (!serviceAccountKey) {
+          throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY environment variable is required');
+        }
+        const serviceAccount = JSON.parse(serviceAccountKey);
         return admin.initializeApp({
-          credential: admin.credential.cert(require('./serviceAccountKey.json')),
+          credential: admin.credential.cert(serviceAccount),
         });
       },
     },
