@@ -1,0 +1,26 @@
+# Simple Dockerfile for Railway
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy source code
+COPY . ./
+
+# Generate Prisma and build
+RUN npx prisma generate
+RUN npm run build
+
+# Remove dev dependencies
+RUN npm prune --production
+
+# Expose port
+EXPOSE 3000
+
+# Start app
+CMD ["npm", "run", "start:railway"]

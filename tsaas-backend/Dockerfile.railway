@@ -1,0 +1,44 @@
+# Railway-optimized Dockerfile
+FROM node:20-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache dumb-init
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --silent
+
+# Copy source code
+COPY . ./
+
+# Generate Prisma client
+RUN npx prisma generate
+
+# Build application
+RUN npm run build
+
+# Remove dev dependencies for production
+RUN npm ci --only=production --silent && npm cache clean --force
+
+# Install Prisma CLI
+RUN npm install --no-save prisma --silent
+
+# Create user
+RUN addgroup -g 1001 -S nodejs && adduser -S nestjs -u 1001 -G nodejs
+RUN chown -R nestjs:nodejs /app
+USER nestjs
+
+# Expose port
+EXPOSE 3000
+
+# Environment
+ENV NODE_ENV=production
+
+# Start with dumb-init
+ENTRYPOINT ["dumb-init", "--"]
+CMD ["npm", "run", "start:railway"]

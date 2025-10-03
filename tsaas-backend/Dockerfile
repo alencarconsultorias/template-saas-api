@@ -1,63 +1,47 @@
-# Build stage
-FROM node:20-alpine AS builder
+# Use Node.js 20 Alpine
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
 
-# Copy package files first for better caching
+# Copy package files first
 COPY package*.json ./
 
-# Install dependencies with clean cache
-RUN npm ci --only=production --silent && npm cache clean --force
+# Install all dependencies (including dev dependencies for build)
+RUN npm ci
 
-# Copy source code and configuration files
+# Copy source code
 COPY . ./
 
-# Generate Prisma client and build the application
+# Generate Prisma client
 RUN npx prisma generate
+
+# Build the application
 RUN npm run build
 
-# Production stage
-FROM node:20-alpine
+# Remove dev dependencies and use production only
+RUN npm ci --only=production && npm cache clean --force
 
-WORKDIR /app
+# Install Prisma CLI for migrations
+RUN npm install --no-save prisma
 
-# Install system dependencies
-RUN apk add --no-cache dumb-init
-
-# Copy package files and install production dependencies
-COPY package*.json ./
-RUN npm ci --only=production --silent && npm cache clean --force
-
-# Copy built application from builder stage
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-
-# Copy generated Prisma client
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
-
-# Install Prisma CLI in the runtime image for migrations
-RUN npm install --no-save prisma@^6.11.1 --silent
-
-# Create non-root user for security
+# Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nestjs -u 1001 -G nodejs
 
-# Change ownership of the app directory
+# Change ownership
 RUN chown -R nestjs:nodejs /app
 USER nestjs
 
-# Expose default port (Railway sets PORT automatically)
+# Expose port
 EXPOSE 3000
 
-# Set environment variables
+# Set environment
 ENV NODE_ENV=production
 
-# Health check uses PORT if provided
+# Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "const port=process.env.PORT||3000;require('http').get(`http://localhost:${port}/health`, (res)=>process.exit(res.statusCode===200?0:1)).on('error',()=>process.exit(1))"
 
-# Start the application with dumb-init for proper signal handling
-ENTRYPOINT ["dumb-init", "--"]
+# Start application
 CMD ["npm", "run", "start:railway"]
