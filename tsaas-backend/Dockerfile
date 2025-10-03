@@ -34,6 +34,9 @@ COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 
+# Install Prisma CLI in the runtime image for migrations
+RUN npm install --no-save prisma@^6.11.1
+
 ## Do not bake environment files into the image; Railway injects env vars
 
 # Create non-root user for security
