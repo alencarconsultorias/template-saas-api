@@ -1,7 +1,6 @@
 {
-  "version": 2,
   "functions": {
-    "api/**/*.ts": {
+    "api/**/*": {
       "runtime": "nodejs20.x",
       "memory": 1024,
       "maxDuration": 10
