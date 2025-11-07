@@ -3,12 +3,13 @@ import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import { INestApplication } from '@nestjs/common';
 import * as express from 'express';
 import { Request, Response } from 'express';
 
 // Create a single Express instance to be reused across invocations
 const server = express();
-let app: any;
+let app: INestApplication | null = null;
 let isInitialized = false;
 let initPromise: Promise<void> | null = null;
 
@@ -62,9 +63,19 @@ function ensureInitialized(): Promise<void> {
 export default async function handler(req: Request, res: Response): Promise<void> {
   try {
     await ensureInitialized();
-    server(req, res);
+    
+    if (!app) {
+      throw new Error('NestJS application not initialized');
+    }
+
+    // Get the Express instance from NestJS HTTP adapter
+    // This is the properly configured Express app that NestJS has set up
+    const expressApp = app.getHttpAdapter().getInstance();
+    
+    // Handle the request using the NestJS-configured Express instance
+    expressApp(req, res);
   } catch (error) {
-    console.error('Error initializing NestJS app:', error);
+    console.error('Error handling request:', error);
     if (!res.headersSent) {
       res.status(500).json({
         error: 'Internal Server Error',
