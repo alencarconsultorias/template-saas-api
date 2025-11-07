@@ -3,19 +3,31 @@ import { AppModule } from './app.module';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import express from 'express';
+import * as express from 'express';
+import { Request, Response } from 'express';
 
 // Create a single Express instance to be reused across invocations
 const server = express();
+let app: any;
 let isInitialized = false;
+let initPromise: Promise<void> | null = null;
 
 async function bootstrap(): Promise<void> {
   if (isInitialized) return;
-  const app = await NestFactory.create(AppModule, new ExpressAdapter(server), { cors: true });
+  
+  const nestApp = await NestFactory.create(AppModule, new ExpressAdapter(server), { 
+    cors: true,
+    logger: false, // Disable default logger, we'll use Winston
+  });
 
   // Logger via Winston
-  const logger = app.get(WINSTON_MODULE_NEST_PROVIDER);
-  app.useLogger(logger);
+  try {
+    const logger = nestApp.get(WINSTON_MODULE_NEST_PROVIDER);
+    nestApp.useLogger(logger);
+  } catch (error) {
+    // Logger might not be available, continue without it
+    console.error('Failed to get Winston logger:', error);
+  }
 
   // Swagger setup (mesmo path do main.ts)
   const config = new DocumentBuilder()
@@ -27,15 +39,37 @@ async function bootstrap(): Promise<void> {
       'accessToken',
     )
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api-docs', app, document);
+  const document = SwaggerModule.createDocument(nestApp, config);
+  SwaggerModule.setup('api-docs', nestApp, document);
 
-  await app.init();
+  await nestApp.init();
+  app = nestApp;
   isInitialized = true;
 }
 
-// Initialize immediately (cold start)
-void bootstrap();
+// Initialize on first request (lazy initialization)
+function ensureInitialized(): Promise<void> {
+  if (isInitialized) {
+    return Promise.resolve();
+  }
+  if (!initPromise) {
+    initPromise = bootstrap();
+  }
+  return initPromise;
+}
 
 // Export the Express handler for Vercel Serverless Functions
-export default server;
+export default async function handler(req: Request, res: Response): Promise<void> {
+  try {
+    await ensureInitialized();
+    server(req, res);
+  } catch (error) {
+    console.error('Error initializing NestJS app:', error);
+    if (!res.headersSent) {
+      res.status(500).json({
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      });
+    }
+  }
+}
